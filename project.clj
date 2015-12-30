@@ -17,6 +17,7 @@
                  [environ "1.0.1"]
                  [org.clojure/clojurescript "1.7.170" :scope "provided"]
                  [secretary "1.2.3"]
+                 [re-frame "0.6.0"]
                  [venantius/accountant "0.1.6"
                   :exclusions [org.clojure/tools.reader]]
                  
