@@ -1,0 +1,54 @@
+state: {
+	rows: {
+		0: {
+			0: {
+				value: 1
+				formula: 1
+			}
+			4: {
+				value: 3
+				formula: 3
+			}
+		}
+		1: {
+			3: {
+				value: 	5
+				formula: ‘2 * r[0][0] + r[0][4]’
+			}
+		}
+	}
+
+	cols: {
+		0: {
+			0: {
+				value: 1
+				formula: 1
+			}
+		}
+		3: {
+			1: {
+				value: 5
+				formula: ‘2 * r[0][0] + r[0][4]’
+			}
+		}
+		4: {
+			0: {
+				value: 3
+				formula: 3
+			}
+		}
+	}
+}
+
+Cell’s view
+ * Subscription to a row and column
+ * The subscription will return: 
+    * The current cell state (formula and value)
+    * The other cells that the current formula depends on to calculate the value
+       (if they change, then you should recompute)
+
+When directly updating cell:
+
+Recalculate cell value
+Update state
+The other cells should recalculate themselves
