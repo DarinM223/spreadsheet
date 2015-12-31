@@ -10,6 +10,11 @@
 (def initial-sheet {:rows {}
                     :cols {}})
 
+(defn eval-formula 
+  "Evaluates the formula and returns the value
+   TODO: implement this"
+  [formula] formula)
+
 ;; Handlers
 
 (register-handler
@@ -18,12 +23,14 @@
     (merge db initial-sheet)))
 
 (register-handler
-  :add-cell
-  (fn [db [_ x y cell]]
+  :update-formula
+  (fn [db [_ x y formula]]
     ;; TODO: check if cell is correct before adding
-    (-> db
-        (assoc-in [:rows x y] cell)
-        (assoc-in [:cols y x] cell))))
+    (let [cell {:formula formula
+                :value (eval-formula formula)}]
+      (-> db
+          (assoc-in [:rows x y] cell)
+          (assoc-in [:cols y x] cell)))))
 
 ;; Subscriptions
 
@@ -31,7 +38,5 @@
   :cell
   (fn [db [_ x y]]
     ;; TODO: also return cells that it uses for the formula
-    (reaction (-> (:rows @db)
-                  (get x)
-                  (get y)))))
+    (reaction (get-in @db [:rows x y]))))
 
