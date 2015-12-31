@@ -13,7 +13,7 @@
 (defn home-page []
   [:div 
    [:h1 "Spreadsheet"]
-   [:h3 "A single page app test in Clojurescript"]
+   [:h3 "A single page app test in ClojureScript"]
    [cell 0 0]
    [cell 0 1]
    [:div [:a {:href "/about"} "go to about page"]]])
