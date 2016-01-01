@@ -3,19 +3,19 @@
               [reagent.session :as session]
               [secretary.core :as secretary :include-macros true]
               [accountant.core :as accountant]
-              [spreadsheet.cell :refer [cell]]
-              [re-frame.core :refer [dispatch-sync]]
-              [spreadsheet.sheet]))
+              [spreadsheet.sheet :refer [sheet-component]]
+              [re-frame.core :refer [dispatch
+                                     dispatch-sync]]
+              [spreadsheet.data]))
 
 ;; -------------------------
 ;; Views
 
 (defn home-page []
-  [:div 
+  [:div {:on-click #(dispatch [:cell-lose-focus])}
    [:h1 "Spreadsheet"]
    [:h3 "A single page app test in ClojureScript"]
-   [cell 0 0]
-   [cell 0 1]
+   [sheet-component 1 2]
    [:div [:a {:href "/about"} "go to about page"]]])
 
 (defn about-page []
