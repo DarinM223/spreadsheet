@@ -4,20 +4,57 @@
                                    register-sub
                                    dispatch]]))
 
-(def initial-rows 10)
-(def initial-cols 10)
-
 (def initial-sheet {:editing-cell nil
+                    :clicked-cell nil
+                    :temp-formula ""
                     :rows {}
                     :cols {}})
 
 (def initial-cell {:formula ""
                    :value ""})
 
-(defn eval-formula 
+(defn eval-formula
   "Evaluates the formula and returns the value
    TODO: implement this"
   [formula] formula)
+
+(defn validate-formula
+  "Checks if a formula is valid
+   TODO: implement this"
+  [formula]
+  true)
+
+(defn cell-str
+  "Returns the string description
+   of the cell
+   Example: cell at row 5 and column 0
+   will return A5
+   TODO: implement this"
+  [x y]
+  (str x y))
+
+(defn persist-formula
+  "Returns a new local data store with
+   the temporary formula persisted to
+   the editing cell"
+  [db]
+  (if-let [[x y] (:editing-cell db)]
+    (let [cell (if-let [existing-cell (get-in db [:rows x y])]
+                  existing-cell
+                  initial-cell)]
+      (if-let [formula (if-let [[cx cy] (:clicked-cell db)]
+                          (str (:temp-formula db) (cell-str cx cy))
+                          (:temp-formula db))]
+        (if (validate-formula formula)
+          (let [updated-cell (-> cell
+                                 (assoc :formula formula)
+                                 (assoc :value (eval-formula formula)))]
+              (-> db
+                  (assoc-in [:rows x y] updated-cell)
+                  (assoc-in [:cols y x] updated-cell)))
+          db)
+        db))
+    db))
 
 ;; Handlers
 
@@ -27,29 +64,40 @@
     (merge db initial-sheet)))
 
 (register-handler
-  :update-formula
-  (fn [db [_ x y formula]]
-    ;; TODO: check if cell is correct before adding
-    (let [cell (if-let [existing-cell (get-in db [:rows x y])]
-                 existing-cell
-                 initial-cell)]
-      (let [updated-cell (-> cell
-                             (assoc :formula formula)
-                             (assoc :value (eval-formula formula)))]
-        (-> db
-            (assoc-in [:rows x y] updated-cell)
-            (assoc-in [:cols y x] updated-cell))))))
-
+  :change-temp-formula
+  (fn [db [_ formula]]
+    (-> db
+        (assoc :temp-formula formula)
+        (assoc :clicked-cell nil))))
 
 (register-handler
   :double-click-cell
   (fn [db [_ x y]]
-    (assoc db :editing-cell [x y])))
+    (-> db
+        (assoc :editing-cell [x y])
+        (assoc :clicked-cell nil)
+        (assoc :temp-formula (if-let [{formula :formula} (get-in db [:rows x y])]
+                                formula
+                                "")))))
 
 (register-handler
   :cell-lose-focus
+  (fn [db _]
+    ; persist temporary formula and clear temporary fields
+    (let [updated-db (persist-formula db)]
+      (-> updated-db
+          (assoc :editing-cell nil)
+          (assoc :clicked-cell nil)
+          (assoc :temp-formula "")))))
+
+(register-handler
+  :clicked-cell
   (fn [db [_ x y]]
-    (assoc db :editing-cell nil)))
+    (if-let [[ex ey] (:editing-cell db)]
+      (if (not (and (= ex x) (= ey y)))
+        (assoc db :clicked-cell [x y])
+        db)
+      db)))
 
 ;; Subscriptions
 
@@ -58,7 +106,7 @@
   (fn [db _]
     (reaction (:editing-cell @db))))
 
-(register-sub 
+(register-sub
   :cell
   (fn [db [_ x y]]
     ;; TODO: also return cells that it uses for the formula
@@ -66,8 +114,10 @@
                  existing-cell
                  initial-cell)]
       (if-let [[ex ey] (:editing-cell @db)]
-        (if (and (= x ex) (= y ey))
-          (reaction (assoc cell :editing true))
+        (if (and (= x ex) (= y ey)) ; check if the subscribed cell is the current editing cell
+          (reaction (-> cell
+                        (assoc :editing true)
+                        (assoc :temp-formula (:temp-formula @db))
+                        (assoc :clicked-cell (:clicked-cell @db))))
           (reaction cell))
         (reaction cell)))))
-

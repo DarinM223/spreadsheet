@@ -4,8 +4,7 @@
 ;; Views
 
 (defn sheet-component [rows cols]
-  [:div 
+  [:div
    (for [x (range 0 rows)
          y (range 0 cols)]
      [cell-component x y])])
-

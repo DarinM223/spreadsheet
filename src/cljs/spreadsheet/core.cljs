@@ -20,9 +20,9 @@
 
 (defn about-page []
   [:div [:h1 "About Spreadsheet"]
-   [:div 
+   [:div
     [:p "This app intended to be a clone of Google Sheets
-        to show how to implement a single page app in a 
+        to show how to implement a single page app in a
         reactive functional manner"]]
    [:div [:a {:href "/"} "go to the home page"]]])
 
