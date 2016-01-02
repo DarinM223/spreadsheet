@@ -28,10 +28,9 @@
   "Returns the string description
    of the cell
    Example: cell at row 5 and column 0
-   will return A5
-   TODO: implement this"
+   will return A5"
   [x y]
-  (str x y))
+  (str (char (+ x (.charCodeAt "A" 0))) y))
 
 (defn persist-formula
   "Returns a new local data store with

@@ -15,13 +15,13 @@
   [:div {:on-click #(dispatch [:cell-lose-focus])}
    [:h1 "Spreadsheet"]
    [:h3 "A single page app test in ClojureScript"]
-   [sheet-component 1 2]
+   [sheet-component 3 3]
    [:div [:a {:href "/about"} "go to about page"]]])
 
 (defn about-page []
   [:div [:h1 "About Spreadsheet"]
    [:div
-    [:p "This app intended to be a clone of Google Sheets
+    [:p "This app is intended to be a clone of Google Sheets
         to show how to implement a single page app in a
         reactive functional manner"]]
    [:div [:a {:href "/"} "go to the home page"]]])
