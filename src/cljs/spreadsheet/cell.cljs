@@ -1,7 +1,7 @@
 (ns spreadsheet.cell
-  (:require [re-frame.core :refer [subscribe
-                                   dispatch]]
-            [spreadsheet.data :refer [cell-str]]))
+  (:require [re-frame.core :refer [subscribe]]
+                                   dispatch
+            [spreadsheet.data :refer [cell-str]]
 
 (def keycodes {:enter 13})
 
@@ -18,11 +18,12 @@
   "Generates the HTML layout for a cell"
   [x y cell]
   [:span
-   [:input {:type "text" :value (if (:editing cell)
-                                  (if-let [[cx cy] (:clicked-cell cell)]
-                                    (str (:temp-formula cell) (cell-str cx cy))
-                                    (:temp-formula cell))
-                                  (:value cell))
+   [:input {:type "text"
+            :value (if (:editing cell)
+                     (if-let [[cx cy] (:clicked-cell cell)]
+                       (str (:temp-formula cell) (cell-str cx cy))
+                       (:temp-formula cell))
+                     (:value cell))
             :on-change #(dispatch [:change-temp-formula (-> % .-target .-value)])
             :readOnly (nil? (:editing cell))
             :on-click (fn [e]
