@@ -47,14 +47,6 @@
     (subs str 1 (count str))))
 
 (defn str-to-int
-  "Converts a string to an integer representation"
-  [str]
-  (if (empty? str)
-    nil
-    #?(:clj (Integer/parseInt str)
-       :cljs (js/parseInt str 10))))
-
-(defn str-to-int
   "Converts a number string to a number, or nil if
    the string is empty
    Example: '100' -> 100, '' -> nil"
@@ -62,7 +54,7 @@
   (if (empty? str)
     nil
     #?(:clj (Integer/parseInt str)
-       :cljs (js/parseInt str))))
+       :cljs (js/parseInt str 10))))
 
 (defn split-num-from-str
   "Takes a number from the beginning of the string

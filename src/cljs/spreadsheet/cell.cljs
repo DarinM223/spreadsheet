@@ -1,7 +1,7 @@
 (ns spreadsheet.cell
   (:require [re-frame.core :refer [subscribe
                                    dispatch]]
-            [spreadsheet.data :refer [cell-str]]
+            [spreadsheet.data :refer [cell-str]]))
 
 (def keycodes {:enter 13})
 
@@ -29,6 +29,9 @@
             :on-click (fn [e]
                         (dispatch [:clicked-cell x y])
                         (.stopPropagation e))
+            :on-contextMenu (fn [e]
+                              (dispatch [:right-click-cell x y])
+                              (.preventDefault e))
             :on-keyDown handle-keydown
             :on-doubleClick #(dispatch [:double-click-cell x y])}]])
 
