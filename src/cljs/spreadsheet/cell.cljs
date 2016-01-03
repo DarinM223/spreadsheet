@@ -1,6 +1,6 @@
 (ns spreadsheet.cell
-  (:require [re-frame.core :refer [subscribe]]
-                                   dispatch
+  (:require [re-frame.core :refer [subscribe
+                                   dispatch]]
             [spreadsheet.data :refer [cell-str]]
 
 (def keycodes {:enter 13})
