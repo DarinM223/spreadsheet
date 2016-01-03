@@ -39,11 +39,11 @@
   [db]
   (if-let [[x y] (:editing-cell db)]
     (let [cell (if-let [existing-cell (get-in db [:rows x y])]
-                  existing-cell
-                  initial-cell)]
+                 existing-cell
+                 initial-cell)]
       (if-let [formula (if-let [[cx cy] (:clicked-cell db)]
-                          (str (:temp-formula db) (cell-str cx cy))
-                          (:temp-formula db))]
+                         (str (:temp-formula db) (cell-str cx cy))
+                         (:temp-formula db))]
         (if (validate-formula formula)
           (let [updated-cell (-> cell
                                  (assoc :formula formula)
@@ -76,8 +76,8 @@
         (assoc :editing-cell [x y])
         (assoc :clicked-cell nil)
         (assoc :temp-formula (if-let [{formula :formula} (get-in db [:rows x y])]
-                                formula
-                                "")))))
+                               formula
+                               "")))))
 
 (register-handler
   :cell-lose-focus

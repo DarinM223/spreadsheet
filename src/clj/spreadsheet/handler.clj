@@ -8,10 +8,10 @@
 
 (def mount-target
   [:div#app
-      [:h3 "ClojureScript has not been compiled!"]
-      [:p "please run "
-       [:b "lein figwheel"]
-       " in order to start the compiler"]])
+   [:h3 "ClojureScript has not been compiled!"]
+   [:p "please run "
+    [:b "lein figwheel"]
+    " in order to start the compiler"]])
 
 (def loading-page
   (html
@@ -25,11 +25,10 @@
      mount-target
      (include-js "js/app.js")]]))
 
-
 (defroutes routes
   (GET "/" [] loading-page)
   (GET "/about" [] loading-page)
-  
+
   (resources "/")
   (not-found "Not Found"))
 

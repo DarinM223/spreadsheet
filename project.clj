@@ -4,8 +4,6 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :offline? true
-
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [ring-server "0.4.0"]
                  [reagent "0.5.1"
@@ -21,14 +19,15 @@
                  [secretary "1.2.3"]
                  [re-frame "0.6.0"]
                  [venantius/accountant "0.1.6"
-                  :exclusions [org.clojure/tools.reader]]
-                 
-                 ]
+                  :exclusions [org.clojure/tools.reader]]]
+
+
 
   :plugins [[lein-environ "1.0.1"]
             [lein-cljsbuild "1.1.1"]
             [lein-asset-minifier "0.2.4"
-             :exclusions [org.clojure/clojure]]]
+             :exclusions [org.clojure/clojure]]
+            [lein-cljfmt "0.3.0"]]
 
   :ring {:handler spreadsheet.handler/app
          :uberwar-name "spreadsheet.war"}
@@ -76,8 +75,8 @@
                                    :exclusions [org.clojure/clojure org.clojure/tools.reader]]
                                   [org.clojure/tools.nrepl "0.2.12"]
                                   [com.cemerick/piggieback "0.2.1"]
-                                  [pjstadig/humane-test-output "0.7.1"]
-                                  ]
+                                  [pjstadig/humane-test-output "0.7.1"]]
+
 
                    :source-paths ["env/dev/clj"]
                    :plugins [[lein-figwheel "0.5.0-2"
@@ -90,8 +89,8 @@
                                            org.clojure/clojurescript
                                            org.clojure/core.async
                                            org.clojure/tools.analyzer.jvm]]
-                             [org.clojure/clojurescript "1.7.170"]
-                             ]
+                             [org.clojure/clojurescript "1.7.170"]]
+
 
                    :injections [(require 'pjstadig.humane-test-output)
                                 (pjstadig.humane-test-output/activate!)]
@@ -99,8 +98,8 @@
                    :figwheel {:http-server-root "public"
                               :server-port 3449
                               :nrepl-port 7002
-                              :nrepl-middleware ["cemerick.piggieback/wrap-cljs-repl"
-                                                 ]
+                              :nrepl-middleware ["cemerick.piggieback/wrap-cljs-repl"]
+
                               :css-dirs ["resources/public/css"]
                               :ring-handler spreadsheet.handler/app}
 
@@ -108,12 +107,12 @@
 
                    :cljsbuild {:builds {:app {:source-paths ["env/dev/cljs"]
                                               :compiler {:main "spreadsheet.dev"
-                                                         :source-map true}}
+                                                         :source-map true}}}}}
 
 
-                                        }
 
-                               }}
+
+
 
              :uberjar {:hooks [minify-assets.plugin/hooks]
                        :source-paths ["env/prod/clj"]
