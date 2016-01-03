@@ -6,6 +6,7 @@
             [spreadsheet.util :refer [charcode
                                       map-formula]]))
 
+;; Initial states
 
 (def initial-sheet {:editing-cell nil
                     :clicked-cell nil
@@ -16,6 +17,8 @@
 
 (def initial-cell {:formula ""
                    :value ""})
+
+;; Helper functions
 
 (defn eval-formula
   "Evaluates the formula and returns the value
@@ -73,23 +76,36 @@
         (assoc-in [:rows x y] cell)
         (assoc-in [:cols y x] cell))))
 
-(defn cell-range [a b]
+(defn cell-range
+  "Return a range of values between two numbers
+   not including the first number
+   Example: (cell-range 0 2) -> (1 2), (cell-range 2 0) -> (1 0)"
+  [a b]
   (cond
     (> b a) (range (+ a 1) (+ b 1))
-    (< b a) (range (+ b 1) (+ a 1))
+    (< b a) (reverse (range b a))
     (= b a) nil))
 
-(defn cell-increasing [a b]
+(defn cell-increasing
+  "How much to increment a cell over a range
+   Example: (cell-increasing 0 2) -> 1, (cell-increasing 2 0) -> -1"
+  [a b]
   (cond
     (> b a) 1
     (< b a) -1
     (= b a) 0))
 
-(defn x-increase-fn [x1 x2]
+(defn x-increase-fn
+  "Returns a function that increments a formula
+   over an x range"
+  [x1 x2]
   #(vector %1 (+ %2 (cell-increasing x1 x2))))
 
-(defn y-increase-fn [y1 y2]
-  #(vector (str (+ (charcode %1) (cell-increasing y1 y2)) %2)))
+(defn y-increase-fn
+  "Returns a function that increments a formula
+   over a y range"
+  [y1 y2]
+  #(vector (char (+ (charcode %1) (cell-increasing y1 y2))) %2))
 
 (defn apply-increase-formula
   "Applies a function to a formula a certain number of times"
@@ -100,19 +116,28 @@
       formula
       (recur (map-formula increase-fn formula) (- times 1)))))
 
-(defn get-sel-range [[x1 y1] [x2 y2]]
+(defn get-sel-range
+  "Returns a sequence of [x y] cell points given a
+   range of two points"
+  [[x1 y1] [x2 y2]]
   (cond
     (= x1 x2) (->> (cell-range y1 y2)
                    (map #(vector x1 %)))
     (= y1 y2) (->> (cell-range x1 x2)
                    (map #(vector % y1)))))
 
-(defn get-sel-incr-fn [[x1 y1] [x2 y2]]
+(defn get-sel-incr-fn
+  "Returns a function that increments a formula
+   given a range of two points"
+  [[x1 y1] [x2 y2]]
   (cond
     (= x1 x2) (y-increase-fn y1 y2)
     (= y1 y2) (x-increase-fn x1 x2)))
 
-(defn get-sel-formula-range [p1 p2 formula]
+(defn get-sel-formula-range
+  "Returns a sequence of formulas given a range
+   of two points"
+  [p1 p2 formula]
   (let [increase-fn (get-sel-incr-fn p1 p2)
         sel-range (get-sel-range p1 p2)
         num-times-range (range 1 (+ (count sel-range) 1))

@@ -51,4 +51,4 @@ TODO:
 * Check formulas for correctness before saving to cells
 * Determine cells that a cell depends on for calculations based on the formula
 * Evaluate formulas for cells
-* Implement 'drag down' to copy formulas
+* ~~Implement 'drag down' to copy formulas~~
