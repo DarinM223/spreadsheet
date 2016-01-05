@@ -3,8 +3,8 @@
   (:require [re-frame.core :refer [register-handler
                                    register-sub
                                    dispatch]]
-            [spreadsheet.util :refer [charcode
-                                      map-formula]]))
+            [spreadsheet.parser.helpers :refer [charcode]]
+            [spreadsheet.util :refer [map-formula]]))
 
 ;; Initial states
 
