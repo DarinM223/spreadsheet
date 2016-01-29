@@ -1,9 +1,13 @@
 (ns spreadsheet.core
+    (:require-macros [cljs.core.async.macros :refer [go]])
     (:require [reagent.core :as reagent :refer [atom]]
               [reagent.session :as session]
               [secretary.core :as secretary :include-macros true]
               [accountant.core :as accountant]
               [spreadsheet.sheet :refer [sheet-component]]
+              [cljs-http.client :as http]
+              [cljs.core.async :refer [<!]]
+              [cognitect.transit :as t]
               [re-frame.core :refer [dispatch
                                      dispatch-sync]]
               [spreadsheet.data]))
@@ -16,6 +20,12 @@
    [:h1 "Spreadsheet"]
    [:h3 "A single page app test in ClojureScript"]
    [sheet-component 3 3]
+   [:br]
+   [:input {:type "button"
+            :value "Save spreadsheet"
+            :on-click (fn [e]
+                        (dispatch [:save-spreadsheet])
+                        (.stopPropagation e))}]
    [:div [:a {:href "/about"} "go to about page"]]])
 
 (defn about-page []
@@ -29,11 +39,25 @@
 (defn current-page []
   [:div [(session/get :current-page)]])
 
+(defn not-found-page []
+  [:div [:h1 "Resource not found"]])
+
 ;; -------------------------
 ;; Routes
 
 (secretary/defroute "/" []
   (session/put! :current-page #'home-page))
+
+(secretary/defroute "/:id" {id :id}
+  (do
+    (go
+      (let [response (<! (http/get (str "/api/cell/" id) {}))]
+        (if-let [sheet-str (:cell (:body response))]
+          (let [r (t/reader :json)
+                sheet (t/read r sheet-str)]
+            (dispatch [:load-spreadsheet sheet]))
+          (js/alert "Spreadsheet not found"))))
+    (session/put! :current-page #'home-page)))
 
 (secretary/defroute "/about" []
   (session/put! :current-page #'about-page))

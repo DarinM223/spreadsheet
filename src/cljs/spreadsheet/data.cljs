@@ -1,8 +1,12 @@
 (ns spreadsheet.data
-  (:require-macros [reagent.ratom :refer [reaction]])
+  (:require-macros [reagent.ratom :refer [reaction]]
+                   [cljs.core.async.macros :refer [go]])
   (:require [re-frame.core :refer [register-handler
                                    register-sub
                                    dispatch]]
+            [cljs-http.client :as http]
+            [cljs.core.async :refer [<!]]
+            [cognitect.transit :as t]
             [spreadsheet.parser.helpers :refer [charcode]]
             [spreadsheet.util :refer [map-formula]]))
 
@@ -222,6 +226,20 @@
       (let [[formula x1 y1] (:drag-cells db)
             [x2 y2] [x y]]
         (assoc (copy-cells db [x1 y1] [x2 y2] formula) :drag-cells nil)))))
+
+(register-handler
+  :save-spreadsheet
+  (fn [db _]
+    (do
+      (go (let [w (t/writer :json)
+                response (<! (http/post "/api/cell" {:form-params {:cell (t/write w db)}}))]
+            (js/alert (str "Hash: " (:hash (:body response))))))
+      db)))
+
+(register-handler
+  :load-spreadsheet
+  (fn [_ [_ new-db]]
+    new-db))
 
 ;; Subscriptions
 

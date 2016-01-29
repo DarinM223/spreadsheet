@@ -16,7 +16,9 @@ Current Controls
 Playing around in the REPL
 --------------------------
 
-To play around in the REPL, run:
+In order to run the app, you first have to have a redis server running.
+
+Then to play around in the REPL, run:
 
 ```
 lein figwheel
