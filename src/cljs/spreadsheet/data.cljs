@@ -26,27 +26,27 @@
 
 (defn eval-formula
   "Evaluates the formula and returns the value
-   TODO: implement this"
+  TODO: implement this"
   [formula] formula)
 
 (defn validate-formula
   "Checks if a formula is valid
-   TODO: implement this"
+  TODO: implement this"
   [formula]
   true)
 
 (defn cell-str
   "Returns the string description
-   of the cell
-   Example: cell at row 5 and column 0
-   will return A5"
+  of the cell
+  Example: cell at row 5 and column 0
+  will return A5"
   [x y]
   (str (char (+ x (.charCodeAt "A" 0))) y))
 
 (defn persist-formula
   "Returns a new local data store with
-   the temporary formula persisted to
-   the editing cell"
+  the temporary formula persisted to
+  the editing cell"
   [db]
   (if-let [[x y] (:editing-cell db)]
     (let [cell (if-let [existing-cell (get-in db [:rows x y])]
@@ -59,17 +59,17 @@
           (let [updated-cell (-> cell
                                  (assoc :formula formula)
                                  (assoc :value (eval-formula formula)))]
-              (-> db
-                  (assoc-in [:rows x y] updated-cell)
-                  (assoc-in [:cols y x] updated-cell)))
+            (-> db
+                (assoc-in [:rows x y] updated-cell)
+                (assoc-in [:cols y x] updated-cell)))
           db)
         db))
     db))
 
 (defn update-formula
   "Returns a new local data store with
-   the formula of a cell with row x and column
-   y changed to a new formula"
+  the formula of a cell with row x and column
+  y changed to a new formula"
   [db x y formula]
   (let [cell (-> (if-let [existing-cell (get-in db [:rows x y])]
                    existing-cell
@@ -82,8 +82,8 @@
 
 (defn cell-range
   "Return a range of values between two numbers
-   not including the first number
-   Example: (cell-range 0 2) -> (1 2), (cell-range 2 0) -> (1 0)"
+  not including the first number
+  Example: (cell-range 0 2) -> (1 2), (cell-range 2 0) -> (1 0)"
   [a b]
   (cond
     (> b a) (range (+ a 1) (+ b 1))
@@ -92,7 +92,7 @@
 
 (defn cell-increasing
   "How much to increment a cell over a range
-   Example: (cell-increasing 0 2) -> 1, (cell-increasing 2 0) -> -1"
+  Example: (cell-increasing 0 2) -> 1, (cell-increasing 2 0) -> -1"
   [a b]
   (cond
     (> b a) 1
@@ -101,13 +101,13 @@
 
 (defn x-increase-fn
   "Returns a function that increments a formula
-   over an x range"
+  over an x range"
   [x1 x2]
   #(vector %1 (+ %2 (cell-increasing x1 x2))))
 
 (defn y-increase-fn
   "Returns a function that increments a formula
-   over a y range"
+  over a y range"
   [y1 y2]
   #(vector (char (+ (charcode %1) (cell-increasing y1 y2))) %2))
 
@@ -122,7 +122,7 @@
 
 (defn get-sel-range
   "Returns a sequence of [x y] cell points given a
-   range of two points"
+  range of two points"
   [[x1 y1] [x2 y2]]
   (cond
     (= x1 x2) (->> (cell-range y1 y2)
@@ -132,7 +132,7 @@
 
 (defn get-sel-incr-fn
   "Returns a function that increments a formula
-   given a range of two points"
+  given a range of two points"
   [[x1 y1] [x2 y2]]
   (cond
     (= x1 x2) (y-increase-fn y1 y2)
@@ -140,7 +140,7 @@
 
 (defn get-sel-formula-range
   "Returns a sequence of formulas given a range
-   of two points"
+  of two points"
   [p1 p2 formula]
   (let [increase-fn (get-sel-incr-fn p1 p2)
         sel-range (get-sel-range p1 p2)
@@ -150,8 +150,8 @@
 
 (defn copy-cells
   "Returns a new local data store with
-   the cells between the two cells populated with
-   the copied formula"
+  the cells between the two cells populated with
+  the copied formula"
   [db [x1 y1] [x2 y2] formula]
   (if (and (not (= x1 x2)) (not (= y1 y2)))
     (assoc db :drag-cells nil)

@@ -1,16 +1,16 @@
 (ns spreadsheet.core
-    (:require-macros [cljs.core.async.macros :refer [go]])
-    (:require [reagent.core :as reagent :refer [atom]]
-              [reagent.session :as session]
-              [secretary.core :as secretary :include-macros true]
-              [accountant.core :as accountant]
-              [spreadsheet.sheet :refer [sheet-component]]
-              [cljs-http.client :as http]
-              [cljs.core.async :refer [<!]]
-              [cognitect.transit :as t]
-              [re-frame.core :refer [dispatch
-                                     dispatch-sync]]
-              [spreadsheet.data]))
+  (:require-macros [cljs.core.async.macros :refer [go]])
+  (:require [reagent.core :as reagent :refer [atom]]
+            [reagent.session :as session]
+            [secretary.core :as secretary :include-macros true]
+            [accountant.core :as accountant]
+            [spreadsheet.sheet :refer [sheet-component]]
+            [cljs-http.client :as http]
+            [cljs.core.async :refer [<!]]
+            [cognitect.transit :as t]
+            [re-frame.core :refer [dispatch
+                                   dispatch-sync]]
+            [spreadsheet.data]))
 
 ;; -------------------------
 ;; Views
@@ -21,11 +21,12 @@
    [:h3 "A single page app test in ClojureScript"]
    [sheet-component 3 3]
    [:br]
-   [:input {:type "button"
-            :value "Save spreadsheet"
-            :on-click (fn [e]
-                        (dispatch [:save-spreadsheet])
-                        (.stopPropagation e))}]
+   [:div.col-xs-3
+     [:input.form-control {:type "button"
+                           :value "Save spreadsheet"
+                           :on-click (fn [e]
+                                       (dispatch [:save-spreadsheet])
+                                       (.stopPropagation e))}]]
    [:div [:a {:href "/about"} "go to about page"]]])
 
 (defn about-page []
@@ -46,21 +47,21 @@
 ;; Routes
 
 (secretary/defroute "/" []
-  (session/put! :current-page #'home-page))
+                    (session/put! :current-page #'home-page))
 
 (secretary/defroute "/:id" {id :id}
-  (do
-    (go
-      (let [response (<! (http/get (str "/api/cell/" id) {}))]
-        (if-let [sheet-str (:cell (:body response))]
-          (let [r (t/reader :json)
-                sheet (t/read r sheet-str)]
-            (dispatch [:load-spreadsheet sheet]))
-          (js/alert "Spreadsheet not found"))))
-    (session/put! :current-page #'home-page)))
+                    (do
+                      (go
+                        (let [response (<! (http/get (str "/api/cell/" id) {}))]
+                          (if-let [sheet-str (:cell (:body response))]
+                            (let [r (t/reader :json)
+                                  sheet (t/read r sheet-str)]
+                              (dispatch [:load-spreadsheet sheet]))
+                            (js/alert "Spreadsheet not found"))))
+                      (session/put! :current-page #'home-page)))
 
 (secretary/defroute "/about" []
-  (session/put! :current-page #'about-page))
+                    (session/put! :current-page #'about-page))
 
 ;; -------------------------
 ;; Initialize app

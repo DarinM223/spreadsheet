@@ -7,7 +7,7 @@
 
 (defn handle-keydown
   "Handler for keypresses inside cell textfield
-   that catches enter presses"
+  that catches enter presses"
   [e]
   (if (= (.-keyCode e) (:enter keycodes))
     (dispatch [:cell-lose-focus])))
@@ -17,13 +17,14 @@
 (defn cell-field
   "Generates the HTML layout for a cell"
   [x y cell]
-  [:span
+  [:span.col-xs-2 {:style {:padding 0}}
    [:input {:type "text"
-            :value (if (:editing cell)
-                     (if-let [[cx cy] (:clicked-cell cell)]
-                       (str (:temp-formula cell) (cell-str cx cy))
-                       (:temp-formula cell))
-                     (:value cell))
+            :value (do 
+                     (if (:editing cell)
+                       (if-let [[cx cy] (:clicked-cell cell)]
+                         (str (:temp-formula cell) (cell-str cx cy))
+                         (:temp-formula cell))
+                       (:value cell)))
             :on-change #(dispatch [:change-temp-formula (-> % .-target .-value)])
             :readOnly (nil? (:editing cell))
             :on-click (fn [e]
