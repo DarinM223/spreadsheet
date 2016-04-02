@@ -4,10 +4,10 @@
 
 (defn map-formula
   "Applies a function to all of the cells (ignoring ranges) in a spreadsheet formula
-   The function takes a string of length 1 and an integer as the name of each
-   cell (cell A5 goes to ['A' 5])
-   Example: 'A1 + B1' -> 'A2 + B2' with function
-   #(vector %1 (+ %2 1))"
+  The function takes a string of length 1 and an integer as the name of each
+  cell (cell A5 goes to ['A' 5])
+  Example: 'A1 + B1' -> 'A2 + B2' with function
+  #(vector %1 (+ %2 1))"
   [f formula]
   (loop [built-string ""
          rest-string formula]

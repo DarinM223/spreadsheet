@@ -9,8 +9,8 @@
   parameters"
   [rows cols]
   [:div
-   (for [x (range 0 rows)]
+   (for [x (range 1 (+ rows 1))]
      [:div.row
-      (for [y (range 0 cols)]
+      (for [y (range 1 (+ cols 1))]
         [cell-component x y])
       [:br]])])

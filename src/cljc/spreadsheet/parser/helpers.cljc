@@ -7,7 +7,7 @@
 
 (defn charcode
   "Returns the integer code of a character represented
-   as a string with one element"
+  as a string with one element"
   [ch]
   #?(:clj (int (first ch))
      :cljs (.charCodeAt ch 0)))
@@ -30,8 +30,8 @@
 
 (defn first-str
   "Returns the first character of a string
-   or an empty string if there are no characters
-   Example: 'Hello' -> 'H', '' -> ''"
+  or an empty string if there are no characters
+  Example: 'Hello' -> 'H', '' -> ''"
   [str]
   (if (empty? str)
     ""
@@ -39,8 +39,8 @@
 
 (defn rest-str
   "Returns the string with the first character removed
-   or an empty string if there are no characters
-   Example: 'Hello' -> 'ello', '' -> ''"
+  or an empty string if there are no characters
+  Example: 'Hello' -> 'ello', '' -> ''"
   [str]
   (if (empty? str)
     ""
@@ -48,8 +48,8 @@
 
 (defn str-to-int
   "Converts a number string to a number, or nil if
-   the string is empty
-   Example: '100' -> 100, '' -> nil"
+  the string is empty
+  Example: '100' -> 100, '' -> nil"
   [str]
   (if (empty? str)
     nil

@@ -10,7 +10,7 @@
             [spreadsheet.parser.helpers :refer [charcode]]
             [spreadsheet.util :refer [map-formula]]))
 
-;; Initial states
+;; Initial states)
 
 (def initial-sheet {:editing-cell nil
                     :clicked-cell nil
@@ -59,9 +59,9 @@
           (let [updated-cell (-> cell
                                  (assoc :formula formula)
                                  (assoc :value (eval-formula formula)))]
-            (-> db
-                (assoc-in [:rows x y] updated-cell)
-                (assoc-in [:cols y x] updated-cell)))
+              (-> db
+                  (assoc-in [:rows x y] updated-cell)
+                  (assoc-in [:cols y x] updated-cell)))
           db)
         db))
     db))
@@ -140,7 +140,7 @@
 
 (defn get-sel-formula-range
   "Returns a sequence of formulas given a range
-  of two points"
+   of two points"
   [p1 p2 formula]
   (let [increase-fn (get-sel-incr-fn p1 p2)
         sel-range (get-sel-range p1 p2)

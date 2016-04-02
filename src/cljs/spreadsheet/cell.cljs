@@ -19,7 +19,7 @@
   [x y cell]
   [:span.col-xs-2 {:style {:padding 0}}
    [:input {:type "text"
-            :value (do 
+            :value (do
                      (if (:editing cell)
                        (if-let [[cx cy] (:clicked-cell cell)]
                          (str (:temp-formula cell) (cell-str cx cy))
@@ -34,7 +34,12 @@
                               (dispatch [:right-click-cell x y])
                               (.preventDefault e))
             :on-keyDown handle-keydown
-            :on-doubleClick #(dispatch [:double-click-cell x y])}]])
+            :on-doubleClick (fn [e]
+                              (if (not (:editing cell))
+                                (do
+                                  (.focus (.-target e))
+                                  (.select (.-target e))
+                                  (dispatch [:double-click-cell x y]))))}]])
 
 (defn cell-component
   "A React component for a Google Sheets style cell"

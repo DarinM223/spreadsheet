@@ -23,9 +23,9 @@
 
 (defn take-number
   "Takes a number from a formula
-   and returns the number and the rest of the string
-   or nil if the string cannot take a number
-   Example: '100 AD' -> [{:number 100} ' AD']"
+  and returns the number and the rest of the string
+  or nil if the string cannot take a number
+  Example: '100 AD' -> [{:number 100} ' AD']"
   [s]
   (loop [num-str ""
          s s]
@@ -36,22 +36,22 @@
 
 (defn take-decimal
   "Takes a decimal from a formula
-   and returns the decimal and the rest of the string
-   or nil if the string cannot take a number
-   Example: '10.0+3' -> [{:decimal 10.0} '+3']"
+  and returns the decimal and the rest of the string
+  or nil if the string cannot take a number
+  Example: '10.0+3' -> [{:decimal 10.0} '+3']"
   [s])
 
 (defn take-string
   "Takes a string from a formula or
-   nil if the string cannot take a string"
+  nil if the string cannot take a string"
   [s])
 
 (defn take-cell
   "Takes a cell from a formula or
-   nil if the string cannot take a cell"
+  nil if the string cannot take a cell"
   [s])
 
 (defn take-function
   "Takes a function from a formula or
-   nil if the string cannot take a formula"
+  nil if the string cannot take a formula"
   [s])
